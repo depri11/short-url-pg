@@ -1,7 +1,8 @@
 const models = require('../models')
 const response = require('../helpers')
+const urls = {}
 
-exports.getUrl = async (req, res) => {
+urls.getUrl = async (req, res) => {
     try {
         const { id } = req.params
         const data = await models.Get({ id })
@@ -11,7 +12,7 @@ exports.getUrl = async (req, res) => {
     }
 }
 
-exports.createUrl = async (req, res) => {
+urls.createUrl = async (req, res) => {
     try {
         const { url, slug } = req.body
         const data = await models.Create({ url, slug })
@@ -20,3 +21,5 @@ exports.createUrl = async (req, res) => {
         return response(res, 500, error.message)
     }
 }
+
+module.exports = urls

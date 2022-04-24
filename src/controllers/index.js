@@ -4,11 +4,18 @@ const urls = {}
 
 urls.getUrl = async (req, res) => {
     try {
-        const { id } = req.params
-        const data = await models.Get({ id })
-        return response(res, 200, data)
+        const { id: slug } = req.params
+        const data = await models.Get({ slug })
+
+        if (data) {
+            data.map((e) => {
+                res.redirect(e.url)
+            })
+        }
+
+        res.redirect(`/?error=${slug} not found`)
     } catch (error) {
-        return response(res, 500, error.message)
+        res.redirect('/?error=Link not found')
     }
 }
 
@@ -18,6 +25,7 @@ urls.createUrl = async (req, res) => {
         const data = await models.Create({ url, slug })
         return response(res, 201, data)
     } catch (error) {
+        res.redirect('/?error=Link not found')
         return response(res, 500, error.message)
     }
 }

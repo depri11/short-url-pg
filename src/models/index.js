@@ -1,9 +1,9 @@
 const db = require('../configs')
 const models = {}
 
-models.Get = function ({ id }) {
+models.Get = function ({ slug }) {
     return new Promise(function (resolve, reject) {
-        db.query(`SELECT * FROM urls WHERE id = ${id}`)
+        db.query('SELECT * FROM public.urls WHERE slug=$1', [slug])
             .then((data) => {
                 resolve(data.rows)
             })

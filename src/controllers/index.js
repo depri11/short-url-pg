@@ -1,5 +1,7 @@
 const models = require('../models')
 const response = require('../helpers')
+const yup = require('yup')
+const { nanoid } = require('nanoid')
 const urls = {}
 
 urls.getUrl = async (req, res) => {
@@ -20,12 +22,19 @@ urls.getUrl = async (req, res) => {
 }
 
 urls.createUrl = async (req, res) => {
+    let { url, slug } = req.body
+    const schema = yup.object().shape({
+        url: yup.string().trim().url().required(),
+    })
     try {
-        const { url, slug } = req.body
+        await schema.validate({
+            url,
+        })
+        slug = nanoid(5)
+        slug = slug.toLowerCase()
         const data = await models.Create({ url, slug })
         return response(res, 201, data)
     } catch (error) {
-        res.redirect('/?error=Link not found')
         return response(res, 500, error.message)
     }
 }
